@@ -1,0 +1,15 @@
+selenium==4.21.0
+beautifulsoup4==4.12.3
+pypdf==4.2.0
+docx2txt==0.8
+transformers==4.41.1
+torch==2.3.0
+sentence-transformers==3.0.0
+accelerate==0.30.1
+shap==0.45.1
+lime==0.2.0.1
+aif360==0.6.1
+scikit-learn==1.5.0
+numpy==1.26.4
+pandas==2.2.2
+gradio==4.31.4

@@ -1,0 +1,15 @@
+# Data and local storage guardrails
+data/
+outputs/
+*.log
+
+# Python environment artifacts
+__pycache__/
+*.pyc
+.venv/
+env/
+
+# IDE configurations
+.vscode/
+.idea/
+.DS_Store
