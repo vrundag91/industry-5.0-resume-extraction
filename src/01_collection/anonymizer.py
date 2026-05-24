@@ -8,10 +8,16 @@ class ResumeAnonymizer:
     compliance before any human annotation or model training occurs.
     """
     def __init__(self):
-        # Regex patterns for deterministic matching
-        self.email_pattern = r'[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+'
-        self.phone_pattern = r'\(?\b[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}\b'
-        self.url_pattern = r'https?://[^\s]+|www\.[^\s]+'
+        # Updated Regex patterns for messy/flattened real-world data
+        
+        # Catches standard emails, AND flattened ones like "namegmailcom"
+        self.email_pattern = r'([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+|[a-zA-Z0-9]+(?:gmail|yahoo|hotmail|outlook)com)'
+        
+        # Catches standard phone numbers, and solid blocks of 10+ digits
+        self.phone_pattern = r'(\(?\b[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}\b|[0-9]{10,12})'
+        
+        # Catches standard URLs, AND flattened ones like "httpwwwindeedcom..."
+        self.url_pattern = r'(https?://[^\s]+|www\.[^\s]+|http[s]?[a-zA-Z0-9]+|www[a-zA-Z0-9]+)'
         
     def anonymize_text(self, text: str) -> str:
         """Replaces PII with standard placeholders."""
