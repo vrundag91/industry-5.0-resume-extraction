@@ -62,4 +62,35 @@ class FairnessAuditor:
         return np.mean((b / mean_b) * np.log(b / mean_b + 1e-9))
 
 if __name__ == "__main__":
-    print("Fairness Auditor initialized. Ready to compute Industry 5.0 bias metrics.")
+    import os
+    print("Fairness Auditor initialized. Computing Industry 5.0 bias metrics...\n")
+    
+    # Load the synthetic fairness data
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    data_path = os.path.join(base_dir, "data", "03_annotated", "synthetic_fairness_data.csv")
+    
+    if os.path.exists(data_path):
+        df = pd.read_csv(data_path)
+        
+        # Initialize the auditor targeting our synthetic columns
+        auditor = FairnessAuditor(
+            data=df, 
+            protected_attribute="demographic_group", 
+            target_column="true_qualification", 
+            prediction_column="ai_prediction"
+        )
+        
+        # We explicitly set Group_A as privileged and Group_B as unprivileged based on our synthetic logic
+        priv_grp = "Group_A"
+        unpriv_grp = "Group_B"
+        
+        print("--- INDUSTRY 5.0 FAIRNESS METRICS ---")
+        print(f"Total Resumes Audited: {len(df)}")
+        print(f"Statistical Parity Difference:  {auditor.statistical_parity_difference(priv_grp, unpriv_grp):.4f} (Ideal: 0.0)")
+        print(f"Disparate Impact:               {auditor.disparate_impact(priv_grp, unpriv_grp):.4f} (Ideal: 1.0)")
+        print(f"Equal Opportunity Difference:   {auditor.equal_opportunity_difference(priv_grp, unpriv_grp):.4f} (Ideal: 0.0)")
+        print(f"Average Odds Difference:        {auditor.average_odds_difference(priv_grp, unpriv_grp):.4f} (Ideal: 0.0)")
+        print(f"Theil Index (Inequality):       {auditor.theil_index():.4f} (Ideal: 0.0)")
+        print("-------------------------------------")
+    else:
+        print("Error: synthetic_fairness_data.csv not found. Please run the synthetic annotator first.")
